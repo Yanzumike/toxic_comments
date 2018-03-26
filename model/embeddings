@@ -15,6 +15,22 @@ distributed representation考虑了单词之间的相互关系，可以用余弦
 2. embeddings层能够被trained 比不被trained表现效果更好，因为被train，考虑到了词向量在该文本中具体的语境。
 3. 将多个不同的词向量组合起来，能够表征的特征更多，因为每个词向量在被训练的过程中，是利用的不同文本。
 
+优秀名次的做法：
+  第三名： 
+    1.concatenated fasttext and glove twitter embeddings. Fasttext vector is used by itself if there is no glove vector 
+  but not the other way around.  Words without word vectors are replaced with a word vector for a word "something". 
+    将fasttext和glove链接起来构成了embeddings，如果fasttext中有而glove中没有就把glove中该有的那部分当做0.如果fasttext和glove都没有的话，就
+  用something的词向量代替。
+    2.表示如果embeddings能够被trained，会在几个epoch后出现过拟合，表现效果更差。
+  第一名：
+    1.跟第三名一样，认为模型的复杂度90%存在于embedding中，因此embedding关注更多，也采用fasttext和glove最高维的词向量。
+ 
+ 第二十七名：
+    1.Concatenated Glove/300 and Fasttext/300，链接了两个词向量。
+    2.Glove and Fasttext as two independent embedding inputs Concatenation happened after two BiGRU layers.分别训练完成后，再链接。
+    3.对词向量添加别的特征，如num_caps, first_letter_cap, is_bad_word 
+ 
+ 
 
 
 
