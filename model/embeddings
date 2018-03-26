@@ -29,9 +29,30 @@ distributed representation考虑了单词之间的相互关系，可以用余弦
     1.Concatenated Glove/300 and Fasttext/300，链接了两个词向量。
     2.Glove and Fasttext as two independent embedding inputs Concatenation happened after two BiGRU layers.分别训练完成后，再链接。
     3.对词向量添加别的特征，如num_caps, first_letter_cap, is_bad_word 
+    
+ 比赛中用到的词向量有：FastText, Glove twitter, BPEmb, Word2Vec, LexVec
  
  
-
+代码：
+1.随机初始化的 
+ tensorflow：
+ #tf.truncated_normal 以shape形状产生正太分布
+ embedding = tf.Variable(tf.truncated_normal((dict_length, 50), stddev=0.01))
+ #根据inputs的索引选取一个张量embedding里面对应的元素
+ embed = tf.nn.embedding_lookup(embedding, x)
+ 
+ 2 利用词向量的
+ keras：
+ 
+ embeddings_index = {}
+ with open(EMBEDDING_FILE, encoding='utf8') as f:
+     for line in f:
+         values = line.rstrip().rsplit(' ')
+         word = values[0]
+         coefs = np.asarray(values[1:], dtype='float32')
+         embeddings_index[word] = coefs
+ 
+x = Embedding(max_features, embed_size, weights=[embedding_matrix], trainable=False)(sequence_input)
 
 
 
