@@ -3,6 +3,20 @@ embeddings:
 比赛中自己的理解：词向量，能够将输入的一维文本转成二维向量,shape：seq_len*dim，
 用于循环神经网络RNN，或者1位卷积神经网络提取特征。已经用过的有glove_300d，crawl_840B_300d
 
+博客，知乎：
+单词的编码有one-hot representation 和 distributed representation两种。
+one-hot representation编码的单词只有一个维度，彼此之间相互独立。
+distributed representation考虑了单词之间的相互关系，可以用余弦距离表示单词之间的相近关系。
+用word embedding可以将单词转化为distributed representation，这种方式相当于人为地利用先验知识找到了每个单词之间的关系。如girl，female，boy，male：
+可用age以及gender这两个向量来描述4个向量。对于神经网络的训练来说，达到相同的效果，只需要更少的数据量。
+
+在比赛中：
+1. 用glove等训练好的词向量要比自己使用随机初始化的方式好，因为glove等词向量考虑到了单词之间的关系，而随机初始化只是将一维的文本转化成了二维的向量。
+2. embeddings层能够被trained 比不被trained表现效果更好，因为被train，考虑到了词向量在该文本中具体的语境。
+3. 将多个不同的词向量组合起来，能够表征的特征更多，因为每个词向量在被训练的过程中，是利用的不同文本。
+
+
+
 
 
 
