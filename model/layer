@@ -1,0 +1,157 @@
+#模型以embedding作为输入，shape：seq_len * dimension
+
+#经典论文中出现的模型：
+  参考：https://zhuanlan.zhihu.com/p/25928551, 里面有对模型的简要介绍
+  1. fasttext 
+  2. textcnn 已用
+  3. textrnn 已用
+  4. textrcnn 已用
+  5. textrnn+attention 已用
+模型背后的原理要清楚，面试肯定会提问。
+  
+  fasttext：
+    把句子中所有的词向量进行平均（某种意义上可以理解为只有一个avg pooling特殊CNN），然后直接接 softmax 层。
+    fastText没有考虑词序信息的，而它用的 n-gram 特征 trick 恰恰说明了局部序列信息的重要意义。
+  
+  textcnn：
+    结构：embedding -> con1D -> maxpool或者k-maxpool -> softmax或者sigmoid
+    原理：核心点在于捕捉局部相关性，具体到文本分类任务中可以利用CNN来提取句子中类似 n-gram 的关键信息。
+    embedding 分为静态static 和非静态 non-static, static：训练过程中不改变预训练词向量，non-static：训练过程中改变词向量.
+    con1D:需要设计不同尺寸大小的卷积核来提取信息.
+    maxpool, k-maxpool: 保留k个信息，可能包括了全局信息.
+    
+    keras, k-maxpool 代码:
+    
+    class KMaxPooling(Layer):
+    """
+    K-max pooling layer that extracts the k-highest activations from a sequence (2nd dimension).
+    TensorFlow backend.
+    """
+    def __init__(self, k=1, **kwargs):
+        super().__init__(**kwargs)
+        self.input_spec = InputSpec(ndim=3)
+        self.k = k
+
+    def compute_output_shape(self, input_shape):
+        return (input_shape[0], (input_shape[2] * self.k))
+
+    def call(self, inputs):
+        # swap last two dimensions since top_k will be applied along the last dimension
+        #batch_size * seq * step
+        shifted_input = tf.transpose(inputs, [0, 2, 1])
+
+        # extract top_k, returns two tensors [values, indices]
+        top_k = tf.nn.top_k(shifted_input, k=self.k, sorted=True, name=None)[0]
+
+        # return flattened output
+        return Flatten()(top_k)
+    
+    textrnn:
+      递归神经网络（RNN, Recurrent Neural Network），能够更好的表达上下文信息.
+      Bi-directional RNN（实际使用的是双向LSTM）从某种意义上可以理解为可以捕获变长且双向的的 "n-gram" 信息.
+      注意比较rnn 和 gru 的区别，面试会问.里面的门单元
+      
+      rnn的输入：batch-size * steps(seq-len) * dimension
+      输出： batch-size * steps(seq-len) * cells_nums
+      
+      在textrnn后面可以接pool层，对每个cells的每个时候的输出，做average pool 或者maxpool 或者kmax-pool等
+    
+    textrcnn
+    
+      
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#在比赛中出现的经过改进的模型
