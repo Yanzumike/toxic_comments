@@ -47,7 +47,7 @@
         return Flatten()(top_k)
     
     textrnn:
-      结构 embedding -> bi-directional lstm(gru)
+      结构 embedding -> bi-directional lstm(gru) -> maxpool或者kmaxpool ->softmax或者sigmoid
       
       递归神经网络（RNN, Recurrent Neural Network），能够更好的表达上下文信息.
       Bi-directional RNN（实际使用的是双向LSTM）从某种意义上可以理解为可以捕获变长且双向的的 "n-gram" 信息.
@@ -55,106 +55,19 @@
       
       rnn的输入：batch-size * steps(seq-len) * dimension
       输出： batch-size * steps(seq-len) * cells_nums
-      
+     
       在textrnn后面可以接pool层，对每个cells的每个时候的输出，做average pool 或者maxpool 或者kmax-pool等
     
     textrcnn：
+      结构 embedding -> bi-directional lstm(gru) ->connect ->maxpool或者maxpool -> cnn1d -> softmax或者sigmoid
+                                      embedding  ->
       
-    
+      利用rnn和cnn两者的优势,rnn对于全局上下文的把握能力,cnn对于文本中的局部信息把握能力.
+     
+     textrnn + attention机制
+      结构：textrnn的输出为batch-size * steps(seq-len) * cells_nums -> attention layer,shape为batch-size * cells_nums
       
-      
+      attention机制的论文  Hierarchical Attention Networks for Document Classification
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  
 #在比赛中出现的经过改进的模型
